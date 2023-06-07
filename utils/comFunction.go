@@ -17,24 +17,6 @@ import (
 )
 
 // DoTransfer is 토큰 Transfer
-func DoTransfer(stub shim.ChaincodeStubInterface, transParam string, tokenName string) sc.Response {
-
-	_, orgParam := stub.GetFunctionAndParameters()
-
-	walletMeta := wallet.WalletMeta{}
-	json.Unmarshal([]byte(orgParam[0]), &walletMeta)
-	walletMeta.Transdata = transParam
-
-	realTrans, _ := json.Marshal(walletMeta)
-
-	chainCodeFunc := "transfer"
-	invokeArgs := ToChaincodeArgs(chainCodeFunc, string(realTrans))
-	channel := stub.GetChannelID()
-	response := stub.InvokeChaincode(tokenName, invokeArgs, channel)
-
-	return response
-}
-
 // DoBalanceOf is 토큰 balanceOf
 func DoBalanceOf(stub shim.ChaincodeStubInterface, toaddress string, tokenName string) sc.Response {
 
@@ -305,6 +287,13 @@ func InfoLogger(infoLog string) {
 	funcName, line := GetCallerInfo()
 	resultLog := fmt.Sprintf("%s:%d: %s", funcName, line, infoLog)
 	log.SetPrefix("[INFO] ")
+	log.Println(resultLog)
+}
+
+func DebugLogger(infoLog string) {
+	funcName, line := GetCallerInfo()
+	resultLog := fmt.Sprintf("%s:%d: %s", funcName, line, infoLog)
+	log.SetPrefix("[DEBUG] ")
 	log.Println(resultLog)
 }
 
